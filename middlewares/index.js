@@ -1,9 +1,7 @@
-const contactValidation = require("./contactValidation");
-const userValidation = require("./userValidation");
+const movieValidation = require("./movieValidation");
 const errorHandler = require("./errorHandler");
 
 module.exports = {
-  contactValidation,
-  userValidation,
+  movieValidation,
   errorHandler,
 };

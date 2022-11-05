@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const movieSchema = new Schema(
   {
-    idbID: String,
-    userID: String,
+    idbId: Number,
+    userId: String,
     poster_path: String,
     title: { type: String, required: [true, "Set title for movie"] },
     vote_average: Number,

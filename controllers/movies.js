@@ -4,6 +4,7 @@ const { movieService } = require("../service");
 const {
   getFavoritesMovies,
   getWatchedMovies,
+  getFavoriteByID,
   addFavorite,
   addWatched,
   removeFavorite,
@@ -76,10 +77,23 @@ const getWatched = async (req, res, next) => {
   });
 };
 
+const getFavoritesbyIDBId = async (req, res, next) => {
+  const { userID, movieID } = req.params;
+  const movie = await getFavoriteByID(userID, movieID);
+  if (movie) {
+    res.json({
+      status: "success",
+      message: "Movie is in Favorites",
+    });
+  } else {
+    next();
+  }
+};
+
 const createFavoriteMovie = async (req, res, next) => {
   const { userID } = req.params;
   const data = req.body;
-  const movie = await addFavorite(data, userID);
+  const movie = await addFavorite(userID, data);
   if (movie) {
     res.status(201).json({
       status: "success",
@@ -95,7 +109,7 @@ const createFavoriteMovie = async (req, res, next) => {
 const createWatchedMovie = async (req, res, next) => {
   const { userID } = req.params;
   const data = req.body;
-  const movie = await addWatched(data, userID);
+  const movie = await addWatched(userID, data);
   if (movie) {
     res.status(201).json({
       status: "success",
@@ -109,12 +123,12 @@ const createWatchedMovie = async (req, res, next) => {
 };
 
 const removeFavoriteMovie = async (req, res, next) => {
-  const { movieID } = req.params;
-  const movie = await removeFavorite(movieID);
+  const { userID, movieID } = req.params;
+  const movie = await removeFavorite(userID, movieID);
   if (movie) {
     res.json({
       status: "success",
-      message: "Movie was deleted",
+      data: "Movie was deleted",
     });
   } else {
     next();
@@ -137,6 +151,7 @@ const removeWatchedMovie = async (req, res, next) => {
 module.exports = {
   getFavorites,
   getWatched,
+  getFavoritesbyIDBId,
   createFavoriteMovie,
   createWatchedMovie,
   removeFavoriteMovie,

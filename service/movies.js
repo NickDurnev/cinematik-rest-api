@@ -4,8 +4,8 @@ const isValid = require("mongoose").Types.ObjectId.isValid;
 const {
   findFavoritesByUserID,
   findWatchedByUserID,
-  findFavoriteByTitle,
-  findWatchedByTitle,
+  findFavoriteByMovieID,
+  findWatchedByMovieID,
   addFavoriteMovie,
   addWatchedMovie,
   removeFavoriteByID,
@@ -28,25 +28,33 @@ const getWatchedMovies = async (userID, skip, limit) => {
   return movies;
 };
 
-const addFavorite = async (data, userID) => {
-  const movie = await findFavoriteByTitle(data.title);
+const getFavoriteByID = async (userID, movieID) => {
+  const movie = await findFavoriteByMovieID(userID, movieID);
+  if (!movie) {
+    return false;
+  }
+  return movie;
+};
+
+const addFavorite = async (userID, data) => {
+  const movie = await findFavoriteByMovieID(userID, data.idbId);
   if (movie) {
     return false;
   }
   return await addFavoriteMovie(data, userID);
 };
 
-const addWatched = async (data, userID) => {
-  const movie = await findWatchedByTitle(data.title);
+const addWatched = async (userID, data) => {
+  const movie = await findWatchedByMovieID(userID, data.idbId);
   if (movie) {
     return false;
   }
   return await addWatchedMovie(data, userID);
 };
 
-const removeFavorite = async (movieID) => {
+const removeFavorite = async (userID, movieID) => {
   if (!isValid(movieID)) return false;
-  return await removeFavoriteByID(movieID);
+  return await removeFavoriteByID(userID, movieID);
 };
 
 const removeWatched = async (movieID) => {
@@ -57,6 +65,7 @@ const removeWatched = async (movieID) => {
 module.exports = {
   getFavoritesMovies,
   getWatchedMovies,
+  getFavoriteByID,
   addFavorite,
   addWatched,
   removeFavorite,

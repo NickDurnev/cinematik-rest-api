@@ -1,36 +1,44 @@
-const { FavoriteMovies, WatchedMovies } = require("../models");
+const { Movie } = require("../models");
 
-const findFavoritesByUserID = async (id, skip, limit) =>
-  await FavoriteMovies.find({ userID: id }).skip(skip).limit(limit);
+const findByUserID = async (userID, category, skip, limit) =>
+  await Movie.find({ userID: userID, category: category })
+    .skip(skip)
+    .limit(limit);
 
-const findWatchedByUserID = async (id, skip, limit) =>
-  await WatchedMovies.find({ userID: id }).skip(skip).limit(limit);
+const findMovieByIDBId = async (userID, movieID) =>
+  await Movie.findOne({
+    userId: userID,
+    idbId: movieID,
+  });
 
-const findFavoriteByMovieID = async (userID, movieID) =>
-  await FavoriteMovies.findOne({ userId: userID, idbId: movieID });
+const findMovieByIDBIdAndCategory = async (userID, movieID, category) =>
+  await Movie.findOne({ userId: userID, idbId: movieID, category: category });
 
-const findWatchedByMovieID = async (userID, movieID) =>
-  await WatchedMovies.findOne({ userId: userID, idbId: movieID });
+const updateMovieCategory = async (userID, movieID, category) =>
+  await Movie.findOneAndUpdate(
+    {
+      userId: userID,
+      idbId: movieID,
+    },
+    { $set: { category: category } },
+    { new: true }
+  );
 
-const addFavoriteMovie = async (movie, id) =>
-  await FavoriteMovies.create({ userID: id, ...movie });
+const addMovie = async (userID, data, category) =>
+  await Movie.create({ userID: userID, category: category, ...data });
 
-const addWatchedMovie = async (movie, id) =>
-  await WatchedMovies.create({ userID: id, ...movie });
-
-const removeFavoriteByID = async (userID, movieID) =>
-  await FavoriteMovies.findByIdAndRemove({ userId: userID, _id: movieID });
-
-const removeWatchedByID = async (movieID) =>
-  await WatchedMovies.findByIdAndRemove({ _id: movieID });
+const removeMovieByID = async (userID, movieID) =>
+  await Movie.findByIdAndRemove({
+    userId: userID,
+    _id: movieID,
+    status: "favorite",
+  });
 
 module.exports = {
-  findFavoritesByUserID,
-  findWatchedByUserID,
-  findFavoriteByMovieID,
-  findWatchedByMovieID,
-  addFavoriteMovie,
-  addWatchedMovie,
-  removeFavoriteByID,
-  removeWatchedByID,
+  findByUserID,
+  findMovieByIDBId,
+  findMovieByIDBIdAndCategory,
+  addMovie,
+  removeMovieByID,
+  updateMovieCategory,
 };

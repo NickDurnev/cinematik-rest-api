@@ -6,38 +6,14 @@ const router = express.Router();
 
 const { validationMiddleware } = movieValidation;
 
-const {
-  getFavorites,
-  getWatched,
-  getFavoritesbyIDBId,
-  createFavoriteMovie,
-  createWatchedMovie,
-  removeFavoriteMovie,
-  removeWatchedMovie,
-} = ctrMovies;
+const { getMovies, getMoviebyIDBId, addMovie, removeMovie } = ctrMovies;
 
-router.get("/favorites/:userID", errorHandler(getFavorites));
+router.get("/:userID", errorHandler(getMovies));
 
-router.get("/watched/:userID", errorHandler(getWatched));
+router.get("/:userID/:movieID", errorHandler(getMoviebyIDBId));
 
-router.get("/favorites/:userID/:movieID", errorHandler(getFavoritesbyIDBId));
+router.post("/:userID", validationMiddleware, errorHandler(addMovie));
 
-router.get("/watched/:userID/:movieID", errorHandler(createWatchedMovie));
-
-router.post(
-  "/favorites/:userID",
-  validationMiddleware,
-  errorHandler(createFavoriteMovie)
-);
-
-router.post(
-  "/watched/:userID",
-  validationMiddleware,
-  errorHandler(createWatchedMovie)
-);
-
-router.delete("/favorites/:userID/:movieID", errorHandler(removeFavoriteMovie));
-
-router.delete("/watched/:movieID", errorHandler(removeWatchedMovie));
+router.delete("/:userID/:movieID", errorHandler(removeMovie));
 
 module.exports = router;

@@ -2,13 +2,13 @@ const { Schema, model } = require("mongoose");
 
 const movieSchema = new Schema(
   {
-    idbId: Number,
-    userId: String,
+    idbID: { type: Number, unique: true },
+    userID: String,
+    category: String,
     poster_path: String,
     title: {
       type: String,
       required: [true, "Set title for movie"],
-      unique: true,
     },
     vote_average: Number,
     genres: [
@@ -26,6 +26,6 @@ const movieSchema = new Schema(
   { versionKey: false }
 );
 
-const favoriteMovie = model("favoriteMovies", movieSchema);
+const Movie = model("movies", movieSchema);
 
-module.exports = favoriteMovie;
+module.exports = Movie;

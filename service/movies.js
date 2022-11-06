@@ -2,72 +2,50 @@ const { dbMovies } = require("../db");
 const isValid = require("mongoose").Types.ObjectId.isValid;
 
 const {
-  findFavoritesByUserID,
-  findWatchedByUserID,
-  findFavoriteByMovieID,
-  findWatchedByMovieID,
-  addFavoriteMovie,
-  addWatchedMovie,
-  removeFavoriteByID,
-  removeWatchedByID,
+  findByUserID,
+  findMovieByIDBId,
+  findMovieByIDBIdAndCategory,
+  addMovie,
+  removeMovieByID,
+  updateMovieCategory,
 } = dbMovies;
 
-const getFavoritesMovies = async (userID, skip, limit) => {
-  const movies = await findFavoritesByUserID(userID, skip, limit);
+const getMoviesByUserID = async (userID, category, skip, limit) => {
+  const movies = await findByUserID(userID, category, skip, limit);
   if (!movies) {
     return false;
   }
   return movies;
 };
 
-const getWatchedMovies = async (userID, skip, limit) => {
-  const movies = await findWatchedByUserID(userID, skip, limit);
-  if (!movies) {
-    return false;
-  }
-  return movies;
-};
-
-const getFavoriteByID = async (userID, movieID) => {
-  const movie = await findFavoriteByMovieID(userID, movieID);
+const getMovieByID = async (userID, movieID, category) => {
+  const movie = await findMovieByIDBIdAndCategory(userID, movieID, category);
   if (!movie) {
     return false;
   }
   return movie;
 };
 
-const addFavorite = async (userID, data) => {
-  const movie = await findFavoriteByMovieID(userID, data.idbId);
-  if (movie) {
-    return false;
+const createMovie = async (userID, data, category) => {
+  const { idbId } = data;
+  const movie = await findMovieByIDBId(userID, idbId);
+  if (!movie) {
+    return await addMovie(userID, data, category);
   }
-  return await addFavoriteMovie(data, userID);
-};
-
-const addWatched = async (userID, data) => {
-  const movie = await findWatchedByMovieID(userID, data.idbId);
-  if (movie) {
-    return false;
+  if (movie?.category !== category) {
+    return await updateMovieCategory(userID, idbId, category);
   }
-  return await addWatchedMovie(data, userID);
+  return false;
 };
 
-const removeFavorite = async (userID, movieID) => {
+const deleteMovie = async (userID, movieID) => {
   if (!isValid(movieID)) return false;
-  return await removeFavoriteByID(userID, movieID);
-};
-
-const removeWatched = async (movieID) => {
-  if (!isValid(movieID)) return false;
-  return await removeWatchedByID(movieID);
+  return await removeMovieByID(userID, movieID);
 };
 
 module.exports = {
-  getFavoritesMovies,
-  getWatchedMovies,
-  getFavoriteByID,
-  addFavorite,
-  addWatched,
-  removeFavorite,
-  removeWatched,
+  getMoviesByUserID,
+  getMovieByID,
+  createMovie,
+  deleteMovie,
 };

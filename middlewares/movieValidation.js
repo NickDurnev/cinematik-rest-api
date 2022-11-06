@@ -3,8 +3,8 @@ const Joi = require("joi");
 module.exports = {
   validationMiddleware: (req, res, next) => {
     const schema = Joi.object({
-      idbId: Joi.number().required(),
-      userId: Joi.string().required(),
+      idbID: Joi.number().required(),
+      category: Joi.string(),
       poster_path: Joi.string().allow(null, ""),
       title: Joi.string().required(),
       vote_average: Joi.number().allow(null, ""),
@@ -15,8 +15,12 @@ module.exports = {
       overview: Joi.string().allow(null, ""),
       budget: Joi.number().allow(null, ""),
     });
+    const userSchema = Joi.object({
+      userID: Joi.string().required(),
+    });
     const validation = schema.validate(req.body);
-    if (validation.error) {
+    const userIDValidation = userSchema.validate(req.params);
+    if (validation.error || userIDValidation.error) {
       console.log(validation.error);
       return res.status(400).json({ message: `${validation.error.message}` });
     }

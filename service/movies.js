@@ -27,13 +27,14 @@ const getMovieByID = async (userID, movieID, category) => {
 };
 
 const createMovie = async (userID, data, category) => {
-  const { idbId } = data;
-  const movie = await findMovieByIDBId(userID, idbId);
+  const { idbID } = data;
+  const movie = await findMovieByIDBId(userID, idbID);
+  console.log(movie);
   if (!movie) {
     return await addMovie(userID, data, category);
   }
   if (movie?.category !== category) {
-    return await updateMovieCategory(userID, idbId, category);
+    return await updateMovieCategory(userID, idbID, category);
   }
   return false;
 };

@@ -8,17 +8,17 @@ const findByUserID = async (userID, category, skip, limit) =>
 const findMovieByIDBId = async (userID, movieID) =>
   await Movie.findOne({
     userId: userID,
-    idbId: movieID,
+    idbID: movieID,
   });
 
 const findMovieByIDBIdAndCategory = async (userID, movieID, category) =>
-  await Movie.findOne({ userId: userID, idbId: movieID, category: category });
+  await Movie.findOne({ userId: userID, idbID: movieID, category: category });
 
 const updateMovieCategory = async (userID, movieID, category) =>
   await Movie.findOneAndUpdate(
     {
       userId: userID,
-      idbId: movieID,
+      idbID: movieID,
     },
     { $set: { category: category } },
     { new: true }

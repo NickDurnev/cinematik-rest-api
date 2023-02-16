@@ -4,7 +4,6 @@ const isValid = require("mongoose").Types.ObjectId.isValid;
 const {
   findByUserID,
   findMovieByIDBId,
-  findMovieByIDBIdAndCategory,
   addMovie,
   removeMovieByID,
   updateMovieCategory,
@@ -18,8 +17,8 @@ const getMoviesByUserID = async (userID, category, skip, limit) => {
   return movies;
 };
 
-const getMovieByID = async (userID, movieID, category) => {
-  const movie = await findMovieByIDBIdAndCategory(userID, movieID, category);
+const getMovieByID = async (userID, movieID) => {
+  const movie = await findMovieByIDBId(userID, movieID);
   if (!movie) {
     return false;
   }

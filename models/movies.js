@@ -4,7 +4,11 @@ const movieSchema = new Schema(
   {
     idbID: { type: Number, unique: true },
     userID: String,
-    category: String,
+    category: {
+      type: String,
+      enum: ["favorites", "watched"],
+      required: [true, "Set category for movie"],
+    },
     poster_path: String,
     title: {
       type: String,

@@ -11,9 +11,6 @@ const findMovieByIDBId = async (userID, movieID) =>
     idbID: movieID,
   });
 
-const findMovieByIDBIdAndCategory = async (userID, movieID, category) =>
-  await Movie.findOne({ userId: userID, idbID: movieID, category: category });
-
 const updateMovieCategory = async (userID, movieID, category) =>
   await Movie.findOneAndUpdate(
     {
@@ -37,7 +34,6 @@ const removeMovieByID = async (userID, movieID) =>
 module.exports = {
   findByUserID,
   findMovieByIDBId,
-  findMovieByIDBIdAndCategory,
   addMovie,
   removeMovieByID,
   updateMovieCategory,

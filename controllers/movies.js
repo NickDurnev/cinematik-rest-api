@@ -39,14 +39,12 @@ const getMovies = async (req, res, next) => {
 };
 
 const getMoviebyIDBId = async (req, res, next) => {
-  const { category } = req.query;
   const { userID, movieID } = req.params;
-  const movie = await getMovieByID(userID, movieID, category);
+  const movie = await getMovieByID(userID, movieID);
   if (movie) {
     res.json({
       status: "success",
-      data: { id: movie._id },
-      message: `Movie is in ${category}`,
+      data: { id: movie._id, category: movie.category },
     });
   } else {
     next();

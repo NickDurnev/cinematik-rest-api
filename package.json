@@ -1,7 +1,7 @@
 {
   "name": "cinematik-rest-api",
   "version": "1.0.0",
-  "description": "REST API for movies app CINEMATIK. Done by Node.js, Express, MongoDB.",
+  "description": "REST API for movies app CINEMATIK. Done by Node.js, Express, Mongoose.",
   "main": "app.js",
   "scripts": {
     "start": "node ./server.js",
